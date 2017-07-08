@@ -2,7 +2,7 @@ version: '3.3'
 services:
   java:
     build: .
-    image: com.ragedunicorn/java:1.0.0-dev
+    image: ragedunicorn/java:1.0.0-dev
     stdin_open: true
     tty: true
     entrypoint: /bin/sh

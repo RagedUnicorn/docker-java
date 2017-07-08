@@ -6,7 +6,7 @@
 set -o nounset
 
 # variable setup
-DOCKER_JAVA_TAG="com.ragedunicorn/java"
+DOCKER_JAVA_TAG="ragedunicorn/java"
 DOCKER_JAVA_NAME="java"
 DOCKER_JAVA_ID=0
 
