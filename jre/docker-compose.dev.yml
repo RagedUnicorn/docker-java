@@ -1,0 +1,11 @@
+version: '3.3'
+services:
+  java-openjdk:
+    build: .
+    image: ragedunicorn/openjdk:1.0.0-jre-dev
+    stdin_open: true
+    tty: true
+    entrypoint: /bin/sh
+    labels:
+      com.ragedunicorn.java-openjdk.environment: "dev"
+      com.ragedunicorn.java-openjdk.description: "Java OpenJDK JRE environment"

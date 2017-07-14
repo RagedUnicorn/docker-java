@@ -1,8 +1,0 @@
-version: '3.3'
-services:
-  java:
-    build: .
-    image: ragedunicorn/java:1.0.0-stable
-    labels:
-      com.ragedunicorn.java.environment: "prod"
-      com.ragedunicorn.java.description: "Java"
