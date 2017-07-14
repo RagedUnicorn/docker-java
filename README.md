@@ -18,42 +18,6 @@ docker-compose build --no-cache
 docker-compose -f docker-compose.dev.yml build --no-cache
 ```
 
-## Dockery
-
-In the dockery folder are some scripts that help out avoiding retyping long docker commands but are mostly intended for playing around with the container.
-
-#### Build image
-
-The build script builds an image with a defined name
-
-```
-sh dockery/dbuild.sh
-```
-
-#### Run container
-
-Runs the built container. If the container was already run once it will `docker start` the already present container instead of using `docker run`
-
-```
-sh dockery/drun.sh
-```
-
-#### Attach container
-
-Attaching to the container after it is running
-
-```
-sh dockery/dattach.sh
-```
-
-#### Stop container
-
-Stopping the running container
-
-```
-sh dockery/dstop.sh
-```
-
 ## Links
 
 Alpine packages database
