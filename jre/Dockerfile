@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:3.7
 
 LABEL com.ragedunicorn.maintainer="Michael Wiesendanger <michael.wiesendanger@gmail.com>"
 
@@ -11,7 +11,7 @@ LABEL com.ragedunicorn.maintainer="Michael Wiesendanger <michael.wiesendanger@gm
 
 # software versions
 ENV \
-  JAVA_VERSION=8.131.11-r2
+  JAVA_VERSION=8.151.12-r0
 
 ENV \
   JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk \
