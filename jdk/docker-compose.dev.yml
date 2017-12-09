@@ -2,7 +2,7 @@ version: '3.3'
 services:
   java-openjdk:
     build: .
-    image: ragedunicorn/openjdk:1.0.0-jdk-dev
+    image: ragedunicorn/openjdk:1.0.1-jdk-dev
     stdin_open: true
     tty: true
     entrypoint: /bin/sh

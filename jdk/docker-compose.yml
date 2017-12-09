@@ -2,7 +2,7 @@ version: '3.3'
 services:
   java-openjdk:
     build: .
-    image: ragedunicorn/openjdk:1.0.0-jdk-stable
+    image: ragedunicorn/openjdk:1.0.1-jdk-stable
     labels:
       com.ragedunicorn.java-openjdk.environment: "prod"
       com.ragedunicorn.java-openjdk.description: "Java OpenJDK JDK environment"
