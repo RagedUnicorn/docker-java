@@ -9,6 +9,8 @@ This image is intended to build a base for providing an environment for java app
 * openjdk8
 * openjdk8-jre
 
+For an exact version see `Dockerfile`
+
 ## Build
 
 ### Build release image
