@@ -1,8 +1,15 @@
 # docker-java
 
-> A docker base to build a container for Java based on Alpine
+> A docker base image to build a container for Java based on Alpine
 
-This container is intended to build a base for providing an environment for java applications with openjdk.
+This image is intended to build a base for providing an environment for java applications with openjdk.
+
+## Version
+
+* openjdk8
+* openjdk8-jre
+
+## Build
 
 ### Build release image
 
