@@ -1,0 +1,18 @@
+schemaVersion: 2.0.0
+
+commandTests:
+- name: 'java'
+  command: "which"
+  args: ["java"]
+  expectedOutput: ["/usr/bin/java"]
+  exitCode: 0
+- name: 'javac'
+  command: "which"
+  args: ["javac"]
+  expectedOutput: ["/usr/lib/jvm/java-1.8-openjdk/bin/javac"]
+  exitCode: 0
+- name: 'java_version'
+  command: "/usr/bin/java"
+  args: ["-version"]
+  expectedError: ["openjdk version \"1.8.0_171\""]
+  exitCode: 0

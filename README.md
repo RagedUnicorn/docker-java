@@ -27,6 +27,14 @@ docker-compose build --no-cache
 docker-compose -f docker-compose.dev.yml build --no-cache
 ```
 
+## Test
+
+To do basic tests of the structure of the container use the `docker-compose.test.yml` file.
+
+`docker-compose -f docker-compose.test.yml up`
+
+For more info see [container-test](https://github.com/RagedUnicorn/docker-container-test).
+
 ## Links
 
 Alpine packages database

@@ -1,0 +1,10 @@
+schemaVersion: 2.0.0
+
+metadataTest:
+  env:
+    - key: 'JAVA_HOME'
+      value: '/usr/lib/jvm/java-1.8-openjdk'
+  labels:
+    - key: 'com.ragedunicorn.maintainer'
+      value: 'Michael Wiesendanger <michael.wiesendanger@gmail.com>'
+  entrypoint: ["/bin/sh"]
