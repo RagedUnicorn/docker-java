@@ -2,7 +2,7 @@ version: '3.6'
 services:
   java-openjdk:
     build: .
-    image: ragedunicorn/openjdk:1.0.2-jre-dev
+    image: ragedunicorn/openjdk:${JAVA_TAG_VERSION}-jre-dev
     stdin_open: true
     tty: true
     entrypoint: /bin/sh
