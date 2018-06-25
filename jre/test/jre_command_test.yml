@@ -1,12 +1,12 @@
 schemaVersion: 2.0.0
 
 commandTests:
-- name: 'java'
+- name: 'java_installation'
   command: "which"
   args: ["java"]
   expectedOutput: ["/usr/bin/java"]
   exitCode: 0
-- name: 'javac'
+- name: 'javac_installation'
   command: "which"
   args: ["javac"]
   expectedOutput: [""]
