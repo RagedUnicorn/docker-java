@@ -35,6 +35,24 @@ To do basic tests of the structure of the container use the `docker-compose.test
 
 For more info see [container-test](https://github.com/RagedUnicorn/docker-container-test).
 
+Tests can also be run by category such as command and metadata tests by starting single services in `docker-compose.test.yml`
+
+```
+# command tests
+docker-compose -f docker-compose.test.yml up container-test-command
+# metadata tests
+docker-compose -f docker-compose.test.yml up container-test-metadata
+```
+
+The same tests are also available for the development image.
+
+```
+# command tests
+docker-compose -f docker-compose.test.yml up container-dev-test-command
+# metadata tests
+docker-compose -f docker-compose.test.yml up container-dev-test-metadata
+```
+
 ## Links
 
 Alpine packages database
