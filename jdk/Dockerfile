@@ -21,7 +21,7 @@ ENV \
   PATH=$PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin
 
 RUN \
-  set -ex; \
+  set -ex && \
   apk add --no-cache openjdk8="${JAVA_VERSION}"
 
 ENTRYPOINT ["/bin/sh"]
