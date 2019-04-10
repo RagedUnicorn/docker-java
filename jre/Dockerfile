@@ -17,7 +17,7 @@ ENV \
   JAVA_VERSION=8.201.08-r1
 
 ENV \
-  JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk \
+  JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk/jre \
   PATH=$PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin
 
 RUN \
