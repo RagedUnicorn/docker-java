@@ -14,7 +14,7 @@ ENV LANG C.UTF-8
 
 # software versions
 ENV \
-  JAVA_VERSION=8.201.08-r0
+  JAVA_VERSION=8.201.08-r1
 
 ENV \
   JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk \
