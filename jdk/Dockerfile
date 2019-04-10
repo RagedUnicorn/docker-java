@@ -9,6 +9,9 @@ LABEL com.ragedunicorn.maintainer="Michael Wiesendanger <michael.wiesendanger@gm
 #  \____/ .___/\___/_/ /_/\____/_____/_/ |_|
 #       /_/
 
+# Default to UTF-8 file.encoding
+ENV LANG C.UTF-8
+
 # software versions
 ENV \
   JAVA_VERSION=8.201.08-r0
