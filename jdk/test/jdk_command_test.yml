@@ -9,10 +9,10 @@ commandTests:
 - name: 'javac'
   command: "which"
   args: ["javac"]
-  expectedOutput: ["/usr/lib/jvm/java-1.8-openjdk/bin/javac"]
+  expectedOutput: ["/usr/lib/jvm/java-11-openjdk/jre/bin/javac"]
   exitCode: 0
 - name: 'java_version'
   command: "/usr/bin/java"
   args: ["-version"]
-  expectedError: ["openjdk version \"1.8.0_201\""]
+  expectedError: ["openjdk version \"11.0.7\""]
   exitCode: 0
