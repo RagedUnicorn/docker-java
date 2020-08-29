@@ -14,5 +14,5 @@ commandTests:
 - name: 'java_version'
   command: "/usr/bin/java"
   args: ["-version"]
-  expectedError: ["openjdk version \"1.8.0_201\""]
+  expectedError: ["openjdk version \"11.0.7\""]
   exitCode: 0

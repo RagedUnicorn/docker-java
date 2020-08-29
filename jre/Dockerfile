@@ -1,4 +1,4 @@
-FROM alpine:3.9.2
+FROM alpine:3.12.0
 
 LABEL com.ragedunicorn.maintainer="Michael Wiesendanger <michael.wiesendanger@gmail.com>"
 
@@ -14,14 +14,14 @@ ENV LANG C.UTF-8
 
 # software versions
 ENV \
-  JAVA_VERSION=8.201.08-r1
+  JAVA_VERSION=11.0.7_p10-r1
 
 ENV \
-  JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk/jre \
-  PATH=$PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin
+  JAVA_HOME=/usr/lib/jvm/java-11-openjdk/jre \
+  PATH=$PATH:/usr/lib/jvm/java-11-openjdk/jre/bin:/usr/lib/jvm/java-11-openjdk/bin
 
 RUN \
   set -ex && \
-  apk add --no-cache openjdk8-jre="${JAVA_VERSION}"
+  apk add --no-cache openjdk11-jre="${JAVA_VERSION}"
 
 ENTRYPOINT ["/bin/sh"]
