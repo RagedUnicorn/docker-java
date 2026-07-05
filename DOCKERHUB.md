@@ -1,0 +1,103 @@
+# Java (Eclipse Temurin) Alpine Docker Image
+
+![Docker Java](https://raw.githubusercontent.com/ragedunicorn/docker-java/master/docs/docker_java.png)
+
+A minimal Java image on Alpine Linux, shipping Eclipse Temurin 21 (LTS) from the Adoptium apk repository in two variants: a full JDK and a runtime-only JRE.
+
+## Quick Start
+
+```bash
+# Pull the JDK (latest)
+docker pull ragedunicorn/java:latest
+
+# Pull the JRE
+docker pull ragedunicorn/java:latest-jre
+
+# Or pull a specific version
+docker pull ragedunicorn/java:21.0.11-jdk-alpine3.24.1-1
+
+# Print the Java version (default command)
+docker run --rm ragedunicorn/java:latest
+
+# Run a Java source file (JDK only)
+docker run -v $(pwd):/app ragedunicorn/java:latest Hello.java
+```
+
+## Features
+
+- 🚀 **Small footprint**: compact runtime image built on Alpine Linux
+- ☕ **Eclipse Temurin 21 LTS**: pinned Adoptium build, decoupled from Alpine
+- 🔀 **Two variants**: full JDK (`latest`) and runtime-only JRE (`latest-jre`)
+- 🔒 **Security**: non-root user, minimal attack surface
+- 🏗️ **Multi-platform**: supports linux/amd64 and linux/arm64
+- 🎯 **Customizable**: extend with only what you need
+
+## Usage Examples
+
+### Run a Java source file (single-file source launch, JDK only)
+```bash
+docker run -v $(pwd):/app ragedunicorn/java:latest Hello.java
+```
+
+### Run a jar with the JRE
+```bash
+docker run -v $(pwd):/app ragedunicorn/java:latest-jre -jar app.jar
+```
+
+### Interactive Java shell (JDK only)
+```bash
+docker run -it --rm --entrypoint jshell ragedunicorn/java:latest
+```
+
+### Compile with javac (JDK only)
+```bash
+docker run -v $(pwd):/app --entrypoint javac ragedunicorn/java:latest Hello.java
+```
+
+### Build a custom image
+```dockerfile
+FROM ragedunicorn/java:latest-jre
+
+COPY app.jar /app/app.jar
+
+CMD ["-jar", "/app/app.jar"]
+```
+
+## Tags
+
+This image uses semantic versioning that includes all component versions:
+
+**Format:** `{java_version}-{jdk|jre}-alpine{alpine_version}-{build_number}`
+
+### Version Examples
+
+- `21.0.11-jdk-alpine3.24.1-1` - Temurin 21.0.11 JDK on Alpine 3.24.1, build 1
+- `21.0.11-jre-alpine3.24.1-1` - Temurin 21.0.11 JRE on Alpine 3.24.1, build 1
+- `latest` - Most recent stable JDK release
+- `latest-jre` - Most recent stable JRE release
+
+Both variants are published together from a single release. When updates are available through automated dependency management, new releases are created with appropriate version tags.
+
+## Environment Variables
+
+- `JAVA_HOME` - Points at the Temurin installation (`/usr/lib/jvm/java-21-temurin` in the JDK, `/usr/lib/jvm/java-21-temurin-jre` in the JRE)
+- `LANG=C.UTF-8` - UTF-8 default encoding
+
+## Working Directory
+
+The default working directory is `/app`. Mount your code here:
+
+```bash
+docker run -v $(pwd):/app ragedunicorn/java:latest YourProgram.java
+```
+
+## Links
+
+- **GitHub**: [https://github.com/ragedunicorn/docker-java](https://github.com/ragedunicorn/docker-java)
+- **Issues**: [https://github.com/ragedunicorn/docker-java/issues](https://github.com/ragedunicorn/docker-java/issues)
+- **Releases**: [https://github.com/ragedunicorn/docker-java/releases](https://github.com/ragedunicorn/docker-java/releases)
+- **Eclipse Temurin**: [https://adoptium.net/](https://adoptium.net/)
+
+## License
+
+MIT License - See [GitHub repository](https://github.com/ragedunicorn/docker-java) for details.

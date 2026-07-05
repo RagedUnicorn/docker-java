@@ -1,0 +1,40 @@
+# Simple docker-compose example for running Java programs
+#
+# Usage:
+#   docker compose run --rm hello-world
+#   docker compose run --rm jshell
+#   docker compose run --rm jre
+#   docker compose run --rm jdk Hello.java
+
+services:
+  # Run the hello world example via single-file source launch (JDK only)
+  hello-world:
+    image: ragedunicorn/java:${JAVA_JDK_VERSION:-latest}
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ["Hello.java"]
+
+  # Interactive Java shell (JDK only)
+  jshell:
+    image: ragedunicorn/java:${JAVA_JDK_VERSION:-latest}
+    volumes:
+      - .:/app
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    entrypoint: jshell
+
+  # Runtime-only variant; the default command prints the Java version
+  jre:
+    image: ragedunicorn/java:${JAVA_JRE_VERSION:-latest-jre}
+    volumes:
+      - .:/app
+    working_dir: /app
+
+  # General JDK service for running any Java source file
+  jdk:
+    image: ragedunicorn/java:${JAVA_JDK_VERSION:-latest}
+    volumes:
+      - .:/app
+    working_dir: /app
