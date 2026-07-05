@@ -1,0 +1,56 @@
+schemaVersion: 2.0.0
+
+commandTests:
+  # PATH prefixes JAVA_HOME/bin, so which resolves the JVM path directly;
+  # the /usr/bin/java symlink is covered by the file existence tests
+  - name: 'Java installation'
+    command: 'which'
+    args: ['java']
+    expectedOutput: ['/usr/lib/jvm/java-21-temurin/bin/java']
+    exitCode: 0
+
+  # java -version writes to stderr, hence expectedError
+  - name: 'Java version check'
+    command: 'java'
+    args: ['-version']
+    expectedError:
+      - 'openjdk version "21'
+      - 'Temurin'
+    exitCode: 0
+
+  - name: 'Java compiler version check'
+    command: 'javac'
+    args: ['-version']
+    expectedOutput: ['javac 21']
+    exitCode: 0
+
+  - name: 'Jar tool version check'
+    command: 'jar'
+    args: ['--version']
+    expectedOutput: ['jar 21']
+    exitCode: 0
+
+  - name: 'JShell is present'
+    command: 'which'
+    args: ['jshell']
+    exitCode: 0
+
+  - name: 'JAVA_HOME resolves'
+    command: 'sh'
+    args: ['-c', 'ls "$JAVA_HOME/bin/java"']
+    expectedOutput: ['/usr/lib/jvm/java-21-temurin/bin/java']
+    exitCode: 0
+
+  - name: 'Non-root user exists'
+    command: 'id'
+    args: ['java']
+    expectedOutput:
+      - 'uid='
+      - 'java'
+    exitCode: 0
+
+  - name: 'Check working directory'
+    command: 'pwd'
+    args: []
+    expectedOutput: ['/app']
+    exitCode: 0

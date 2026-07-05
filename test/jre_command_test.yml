@@ -1,0 +1,62 @@
+schemaVersion: 2.0.0
+
+commandTests:
+  # PATH prefixes JAVA_HOME/bin, so which resolves the JVM path directly;
+  # the /usr/bin/java symlink is covered by the file existence tests
+  - name: 'Java installation'
+    command: 'which'
+    args: ['java']
+    expectedOutput: ['/usr/lib/jvm/java-21-temurin-jre/bin/java']
+    exitCode: 0
+
+  # java -version writes to stderr, hence expectedError
+  - name: 'Java version check'
+    command: 'java'
+    args: ['-version']
+    expectedError:
+      - 'openjdk version "21'
+      - 'Temurin'
+    exitCode: 0
+
+  # Runtime-only image: developer tools must not be present.
+  # busybox which exits 1 on a miss.
+  - name: 'Java compiler is absent'
+    command: 'which'
+    args: ['javac']
+    exitCode: 1
+
+  - name: 'Jar tool is absent'
+    command: 'which'
+    args: ['jar']
+    exitCode: 1
+
+  - name: 'JShell is absent'
+    command: 'which'
+    args: ['jshell']
+    exitCode: 1
+
+  # keytool ships with the runtime
+  - name: 'Keytool is present'
+    command: 'which'
+    args: ['keytool']
+    exitCode: 0
+
+  - name: 'JAVA_HOME resolves'
+    command: 'sh'
+    args: ['-c', 'ls "$JAVA_HOME/bin/java"']
+    expectedOutput: ['/usr/lib/jvm/java-21-temurin-jre/bin/java']
+    exitCode: 0
+
+  - name: 'Non-root user exists'
+    command: 'id'
+    args: ['java']
+    expectedOutput:
+      - 'uid='
+      - 'java'
+    exitCode: 0
+
+  - name: 'Check working directory'
+    command: 'pwd'
+    args: []
+    expectedOutput: ['/app']
+    exitCode: 0

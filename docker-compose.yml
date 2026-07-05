@@ -1,0 +1,31 @@
+# Docker Compose configuration for running Java
+#
+# Usage:
+#   docker compose run --rm jdk Hello.java
+#   docker compose run --rm jre -jar app.jar
+#   docker compose run --rm jre
+#
+# Both services mount ./app as the working directory
+
+services:
+  jdk:
+    image: ragedunicorn/java:${JAVA_JDK_VERSION:-latest}
+    container_name: java-jdk
+    volumes:
+      - ./app:/app
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    environment:
+      - TERM=xterm-256color
+
+  jre:
+    image: ragedunicorn/java:${JAVA_JRE_VERSION:-latest-jre}
+    container_name: java-jre
+    volumes:
+      - ./app:/app
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    environment:
+      - TERM=xterm-256color

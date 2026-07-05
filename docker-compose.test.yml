@@ -1,0 +1,151 @@
+# Docker Compose configuration for running Container Structure Tests
+#
+# Usage:
+#   docker compose -f docker-compose.test.yml run --rm test-all
+#   docker compose -f docker-compose.test.yml run --rm test-all-jdk
+#   docker compose -f docker-compose.test.yml run --rm test-all-jre
+#
+# This will validate the Java Docker images (jdk and jre variants) structure,
+# commands, and metadata
+
+services:
+  # Test file existence and permissions (jdk)
+  container-test-jdk:
+    image: ragedunicorn/container-test:${CONTAINER_STRUCTURE_TEST_VERSION:-latest}
+    volumes:
+      - ./test/:/test:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["--image", "ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk}", "--config", "/test/jdk_test.yml"]
+    labels:
+      org.opencontainers.image.title: "Container Structure Test - File Tests (JDK)"
+      org.opencontainers.image.description: "Validating Java JDK file structure and permissions"
+      org.opencontainers.image.vendor: "ragedunicorn"
+
+  # Test command execution and Java functionality (jdk)
+  container-test-command-jdk:
+    image: ragedunicorn/container-test:${CONTAINER_STRUCTURE_TEST_VERSION:-latest}
+    volumes:
+      - ./test/:/test:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["--image", "ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk}", "--config", "/test/jdk_command_test.yml"]
+    labels:
+      org.opencontainers.image.title: "Container Structure Test - Command Tests (JDK)"
+      org.opencontainers.image.description: "Validating Java JDK command execution and functionality"
+      org.opencontainers.image.vendor: "ragedunicorn"
+
+  # Test image metadata and labels (jdk)
+  container-test-metadata-jdk:
+    image: ragedunicorn/container-test:${CONTAINER_STRUCTURE_TEST_VERSION:-latest}
+    volumes:
+      - ./test/:/test:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["--image", "ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk}", "--config", "/test/jdk_metadata_test.yml"]
+    labels:
+      org.opencontainers.image.title: "Container Structure Test - Metadata Tests (JDK)"
+      org.opencontainers.image.description: "Validating Java JDK image metadata and OCI labels"
+      org.opencontainers.image.vendor: "ragedunicorn"
+
+  # Test file existence and permissions (jre)
+  container-test-jre:
+    image: ragedunicorn/container-test:${CONTAINER_STRUCTURE_TEST_VERSION:-latest}
+    volumes:
+      - ./test/:/test:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["--image", "ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre}", "--config", "/test/jre_test.yml"]
+    labels:
+      org.opencontainers.image.title: "Container Structure Test - File Tests (JRE)"
+      org.opencontainers.image.description: "Validating Java JRE file structure and permissions"
+      org.opencontainers.image.vendor: "ragedunicorn"
+
+  # Test command execution and Java functionality (jre)
+  container-test-command-jre:
+    image: ragedunicorn/container-test:${CONTAINER_STRUCTURE_TEST_VERSION:-latest}
+    volumes:
+      - ./test/:/test:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["--image", "ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre}", "--config", "/test/jre_command_test.yml"]
+    labels:
+      org.opencontainers.image.title: "Container Structure Test - Command Tests (JRE)"
+      org.opencontainers.image.description: "Validating Java JRE command execution and functionality"
+      org.opencontainers.image.vendor: "ragedunicorn"
+
+  # Test image metadata and labels (jre)
+  container-test-metadata-jre:
+    image: ragedunicorn/container-test:${CONTAINER_STRUCTURE_TEST_VERSION:-latest}
+    volumes:
+      - ./test/:/test:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["--image", "ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre}", "--config", "/test/jre_metadata_test.yml"]
+    labels:
+      org.opencontainers.image.title: "Container Structure Test - Metadata Tests (JRE)"
+      org.opencontainers.image.description: "Validating Java JRE image metadata and OCI labels"
+      org.opencontainers.image.vendor: "ragedunicorn"
+
+  # Run all jdk tests sequentially
+  test-all-jdk:
+    image: ragedunicorn/container-test:${CONTAINER_STRUCTURE_TEST_VERSION:-latest}
+    volumes:
+      - ./test/:/test:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    entrypoint: /bin/sh
+    command: >
+      -c "echo 'Running all Container Structure Tests for Java (JDK)...' &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk} --config /test/jdk_test.yml &&
+          echo '✓ JDK file structure tests passed' &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk} --config /test/jdk_command_test.yml &&
+          echo '✓ JDK command execution tests passed' &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk} --config /test/jdk_metadata_test.yml &&
+          echo '✓ JDK metadata validation tests passed' &&
+          echo && echo '✅ All Java JDK container tests completed successfully!'"
+    labels:
+      org.opencontainers.image.title: "Container Structure Test - All JDK Tests"
+      org.opencontainers.image.description: "Running all validation tests for the Java JDK image"
+      org.opencontainers.image.vendor: "ragedunicorn"
+
+  # Run all jre tests sequentially
+  test-all-jre:
+    image: ragedunicorn/container-test:${CONTAINER_STRUCTURE_TEST_VERSION:-latest}
+    volumes:
+      - ./test/:/test:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    entrypoint: /bin/sh
+    command: >
+      -c "echo 'Running all Container Structure Tests for Java (JRE)...' &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre} --config /test/jre_test.yml &&
+          echo '✓ JRE file structure tests passed' &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre} --config /test/jre_command_test.yml &&
+          echo '✓ JRE command execution tests passed' &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre} --config /test/jre_metadata_test.yml &&
+          echo '✓ JRE metadata validation tests passed' &&
+          echo && echo '✅ All Java JRE container tests completed successfully!'"
+    labels:
+      org.opencontainers.image.title: "Container Structure Test - All JRE Tests"
+      org.opencontainers.image.description: "Running all validation tests for the Java JRE image"
+      org.opencontainers.image.vendor: "ragedunicorn"
+
+  # Run all tests for both variants sequentially
+  test-all:
+    image: ragedunicorn/container-test:${CONTAINER_STRUCTURE_TEST_VERSION:-latest}
+    volumes:
+      - ./test/:/test:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    entrypoint: /bin/sh
+    command: >
+      -c "echo 'Running all Container Structure Tests for Java (JDK + JRE)...' &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk} --config /test/jdk_test.yml &&
+          echo '✓ JDK file structure tests passed' &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk} --config /test/jdk_command_test.yml &&
+          echo '✓ JDK command execution tests passed' &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk} --config /test/jdk_metadata_test.yml &&
+          echo '✓ JDK metadata validation tests passed' &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre} --config /test/jre_test.yml &&
+          echo '✓ JRE file structure tests passed' &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre} --config /test/jre_command_test.yml &&
+          echo '✓ JRE command execution tests passed' &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre} --config /test/jre_metadata_test.yml &&
+          echo '✓ JRE metadata validation tests passed' &&
+          echo && echo '✅ All Java container tests completed successfully!'"
+    labels:
+      org.opencontainers.image.title: "Container Structure Test - All Tests"
+      org.opencontainers.image.description: "Running all validation tests for both Java image variants"
+      org.opencontainers.image.vendor: "ragedunicorn"

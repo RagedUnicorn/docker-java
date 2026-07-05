@@ -1,0 +1,34 @@
+schemaVersion: 2.0.0
+
+fileExistenceTests:
+  - name: 'Java binary exists'
+    path: '/usr/lib/jvm/java-21-temurin/bin/java'
+    shouldExist: true
+
+  - name: 'Java compiler exists'
+    path: '/usr/lib/jvm/java-21-temurin/bin/javac'
+    shouldExist: true
+
+  # Symlink created by java-common's apk trigger
+  - name: 'Java symlink exists'
+    path: '/usr/bin/java'
+    shouldExist: true
+
+  # JVM trust store, wired to the system CA bundle by java-cacerts
+  - name: 'JVM certificate store exists'
+    path: '/usr/lib/jvm/java-21-temurin/lib/security/cacerts'
+    shouldExist: true
+
+  - name: 'Working directory exists'
+    path: '/app'
+    shouldExist: true
+    isExecutableBy: 'any'
+
+  - name: 'SSL certificates exist'
+    path: '/etc/ssl/certs/ca-certificates.crt'
+    shouldExist: true
+
+fileContentTests:
+  - name: 'CA certificates installed'
+    path: '/etc/ssl/certs/ca-certificates.crt'
+    expectedContents: ['-----BEGIN CERTIFICATE-----']
