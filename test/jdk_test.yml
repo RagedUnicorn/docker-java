@@ -14,6 +14,22 @@ fileExistenceTests:
     path: '/usr/bin/java'
     shouldExist: true
 
+  - name: 'Maven binary exists'
+    path: '/opt/maven/bin/mvn'
+    shouldExist: true
+
+  - name: 'Maven symlink exists'
+    path: '/usr/bin/mvn'
+    shouldExist: true
+
+  # Pre-created with java ownership (uid/gid 1000) so a named volume mounted
+  # here for the local repository is initialized writable for the java user
+  - name: 'Maven local repository directory is owned by java'
+    path: '/home/java/.m2'
+    shouldExist: true
+    uid: 1000
+    gid: 1000
+
   # JVM trust store, wired to the system CA bundle by java-cacerts
   - name: 'JVM certificate store exists'
     path: '/usr/lib/jvm/java-21-temurin/lib/security/cacerts'

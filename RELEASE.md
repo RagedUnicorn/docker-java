@@ -48,7 +48,7 @@ When you push a tag, GitHub Actions automatically:
 
 Create a new release when:
 
-1. **Renovate updates dependencies** - After merging Renovate PRs for Alpine or Temurin updates
+1. **Renovate updates dependencies** - After merging Renovate PRs for Alpine, Temurin, or Maven updates
 2. **Bug fixes** - After fixing issues in the Dockerfile or build process
 3. **Feature additions** - After adding new functionality
 4. **Security patches** - Immediately after security-related updates
@@ -56,7 +56,7 @@ Create a new release when:
 ### Build Number Guidelines
 
 - **Reset to 1**: When the Alpine or Temurin version changes
-- **Increment**: When rebuilding with the same versions (fixes, optimizations)
+- **Increment**: When rebuilding with the same versions (fixes, optimizations), including Maven-only updates — the tag encodes only the Java and Alpine versions
 
 ## Post-Release Tasks
 

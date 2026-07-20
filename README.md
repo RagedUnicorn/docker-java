@@ -6,7 +6,7 @@
 [![Test](https://github.com/ragedunicorn/docker-java/actions/workflows/test.yml/badge.svg)](https://github.com/ragedunicorn/docker-java/actions/workflows/test.yml)
 ![License: MIT](docs/license_badge.svg)
 
-> Docker Alpine image with Eclipse Temurin 21 — JDK and JRE variants.
+> Docker Alpine image with Eclipse Temurin 21 — JDK (with Apache Maven) and JRE variants.
 
 ![](./docs/alpine_linux_logo.svg)
 
@@ -16,13 +16,14 @@ This Docker image provides a minimal Java installation built on Alpine Linux. It
 
 Two variants are published from this repository:
 
-- **jdk** (`latest`) — full JDK with `javac`, `jar`, and `jshell`; use it to compile and build
+- **jdk** (`latest`) — full JDK with `javac`, `jar`, `jshell`, and Apache Maven (`mvn`); use it to compile and build
 - **jre** (`latest-jre`) — runtime only; use it to run precompiled applications
 
 ## Features
 
 - **Small footprint**: compact runtime image using Alpine Linux
 - **Eclipse Temurin 21 LTS**: pinned Adoptium build, updated independently of Alpine
+- **Apache Maven**: pinned official binary in the JDK variant, updated independently of Alpine
 - **Two variants**: full JDK for building, minimal JRE for running
 - **Non-root user**: Enhanced security with dedicated java user
 - **Volume mounting**: Easy code and data access through `/app`
@@ -80,6 +81,24 @@ docker run -it --rm --entrypoint jshell ragedunicorn/java:latest
 ```bash
 docker run -v $(pwd):/app --entrypoint javac ragedunicorn/java:latest Hello.java
 ```
+
+#### Build with Maven (JDK only)
+```bash
+# The named volume keeps the local repository (~/.m2) between runs,
+# so dependencies are not re-downloaded on every build. A fresh volume is
+# initialized owned by the java user (the image pre-creates ~/.m2).
+docker run -v $(pwd):/app -v m2cache:/home/java/.m2 --entrypoint mvn ragedunicorn/java:latest package
+```
+
+> **Note (Docker Desktop for Windows):** overwriting existing files on a
+> Windows bind mount can fail with `Operation not permitted` for the non-root
+> `java` user. If your Maven build writes into the mounted workspace (e.g.
+> copies generated resources over existing files), run as root and move the
+> cache volume to root's home:
+>
+> ```bash
+> docker run -u root -v ${PWD}:/app -v m2cache-root:/root/.m2 --entrypoint mvn ragedunicorn/java:latest package
+> ```
 
 #### Check Java Version
 ```bash
@@ -183,6 +202,7 @@ A single git tag (`v{java_version}-alpine{alpine_version}-{build_number}`) produ
 This project uses [Renovate](https://docs.renovatebot.com/) to automatically check for updates to:
 - Alpine Linux base image version (all major, minor, and patch updates)
 - The pinned Eclipse Temurin version, discovered from the Adoptium apk repository listing
+- The pinned Apache Maven version (minor and patch updates within Maven 3), discovered from Maven Central
 
 Renovate runs weekly (every Monday) and creates pull requests when updates are available. Every Alpine reference is kept in sync from a single update: the `FROM` line, the `org.opencontainers.image.base.name` OCI labels, and the Alpine version asserted in `test/jdk_metadata_test.yml` and `test/jre_metadata_test.yml` are grouped into one pull request. The Temurin pin covers both variants — jdk and jre releases are in lockstep — and is grouped separately.
 

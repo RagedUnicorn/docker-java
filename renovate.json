@@ -67,6 +67,21 @@
         "patch"
       ],
       "automerge": true
+    },
+    {
+      "description": "Apache Maven tarball pin: minor/patch automerge (archive.apache.org retains all versions, so a bad automerge is trivially revertible). Majors are excluded — Maven 4 changes the maven-3 download path and is a manual migration",
+      "matchDatasources": [
+        "maven"
+      ],
+      "matchPackageNames": [
+        "org.apache.maven:apache-maven"
+      ],
+      "allowedVersions": "<4.0.0",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "automerge": true
     }
   ],
   "customDatasources": {

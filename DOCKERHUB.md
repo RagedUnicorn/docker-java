@@ -2,7 +2,7 @@
 
 ![Docker Java](https://raw.githubusercontent.com/ragedunicorn/docker-java/master/docs/docker_java.png)
 
-A minimal Java image on Alpine Linux, shipping Eclipse Temurin 21 (LTS) from the Adoptium apk repository in two variants: a full JDK and a runtime-only JRE.
+A minimal Java image on Alpine Linux, shipping Eclipse Temurin 21 (LTS) from the Adoptium apk repository in two variants: a full JDK with Apache Maven and a runtime-only JRE.
 
 ## Quick Start
 
@@ -27,6 +27,7 @@ docker run -v $(pwd):/app ragedunicorn/java:latest Hello.java
 
 - 🚀 **Small footprint**: compact runtime image built on Alpine Linux
 - ☕ **Eclipse Temurin 21 LTS**: pinned Adoptium build, decoupled from Alpine
+- 📦 **Apache Maven**: pinned official binary in the JDK variant, decoupled from Alpine
 - 🔀 **Two variants**: full JDK (`latest`) and runtime-only JRE (`latest-jre`)
 - 🔒 **Security**: non-root user, minimal attack surface
 - 🏗️ **Multi-platform**: supports linux/amd64 and linux/arm64
@@ -53,6 +54,15 @@ docker run -it --rm --entrypoint jshell ragedunicorn/java:latest
 ```bash
 docker run -v $(pwd):/app --entrypoint javac ragedunicorn/java:latest Hello.java
 ```
+
+### Build with Maven (JDK only)
+```bash
+# The named volume keeps the local repository (~/.m2) between runs; a fresh
+# volume is initialized owned by the java user (the image pre-creates ~/.m2)
+docker run -v $(pwd):/app -v m2cache:/home/java/.m2 --entrypoint mvn ragedunicorn/java:latest package
+```
+
+On Docker Desktop for Windows, overwriting existing files on a bind mount can fail with `Operation not permitted` for the non-root `java` user — if your build writes into the mounted workspace, run with `-u root` and use `-v m2cache-root:/root/.m2` for the cache instead.
 
 ### Build a custom image
 ```dockerfile
@@ -81,6 +91,7 @@ Both variants are published together from a single release. When updates are ava
 ## Environment Variables
 
 - `JAVA_HOME` - Points at the Temurin installation (`/usr/lib/jvm/java-21-temurin` in the JDK, `/usr/lib/jvm/java-21-temurin-jre` in the JRE)
+- `MAVEN_HOME` - Points at the Maven installation (`/opt/maven`, JDK only)
 - `LANG=C.UTF-8` - UTF-8 default encoding
 
 ## Working Directory

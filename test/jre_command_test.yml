@@ -35,6 +35,11 @@ commandTests:
     args: ['jshell']
     exitCode: 1
 
+  - name: 'Maven is absent'
+    command: 'which'
+    args: ['mvn']
+    exitCode: 1
+
   # keytool ships with the runtime
   - name: 'Keytool is present'
     command: 'which'

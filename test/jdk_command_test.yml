@@ -35,6 +35,25 @@ commandTests:
     args: ['jshell']
     exitCode: 0
 
+  - name: 'Maven installation'
+    command: 'which'
+    args: ['mvn']
+    expectedOutput: ['/usr/bin/mvn']
+    exitCode: 0
+
+  # Assertion is major-version loose so Maven patch updates need no test changes
+  - name: 'Maven version check'
+    command: 'mvn'
+    args: ['--version']
+    expectedOutput: ['Apache Maven 3']
+    exitCode: 0
+
+  - name: 'MAVEN_HOME resolves'
+    command: 'sh'
+    args: ['-c', 'ls "$MAVEN_HOME/bin/mvn"']
+    expectedOutput: ['/opt/maven/bin/mvn']
+    exitCode: 0
+
   - name: 'JAVA_HOME resolves'
     command: 'sh'
     args: ['-c', 'ls "$JAVA_HOME/bin/java"']

@@ -14,6 +14,10 @@ fileExistenceTests:
     path: '/usr/bin/javac'
     shouldExist: false
 
+  - name: 'Maven symlink is absent'
+    path: '/usr/bin/mvn'
+    shouldExist: false
+
   # Symlink created by java-common's apk trigger
   - name: 'Java symlink exists'
     path: '/usr/bin/java'

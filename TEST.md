@@ -31,17 +31,18 @@ Validates:
 
 - Java binaries exist under the variant's `JAVA_HOME`
 - The `/usr/bin/java` symlink (created by `java-common`) exists
+- **jdk**: the Maven binary (`/opt/maven/bin/mvn`) and the `/usr/bin/mvn` symlink exist; `~/.m2` is pre-created and owned by the java user
 - The JVM certificate store and system CA bundle are present
 - Working directory `/app` exists and is accessible
-- **jre only**: `javac` does NOT exist (runtime-only image)
+- **jre only**: `javac` and `mvn` do NOT exist (runtime-only image)
 
 ### 2. Command Execution Tests (`test/jdk_command_test.yml`, `test/jre_command_test.yml`)
 
 Validates:
 
 - `java -version` reports Temurin 21
-- **jdk**: `javac`, `jar`, and `jshell` are present and functional
-- **jre**: `javac`, `jar`, and `jshell` are absent; `keytool` is present
+- **jdk**: `javac`, `jar`, and `jshell` are present and functional; `mvn --version` reports Apache Maven 3 and `MAVEN_HOME` resolves
+- **jre**: `javac`, `jar`, `jshell`, and `mvn` are absent; `keytool` is present
 - `JAVA_HOME` resolves to a real installation
 - Non-root user functionality
 - Working directory configuration
@@ -51,7 +52,7 @@ Validates:
 Validates:
 
 - OCI-compliant labels are present and correct
-- `JAVA_HOME` and `LANG` environment variables per variant
+- `JAVA_HOME` and `LANG` environment variables per variant (plus `MAVEN_HOME` in the jdk)
 - Container entrypoint (`java`) and default command (`-version`)
 - Working directory configuration
 - User context (runs as non-root java user)
@@ -134,8 +135,8 @@ test changes.
 ### `which` Exit Codes in the JRE Negative Tests
 
 The jre command tests assert that developer tools are absent by expecting
-`which javac` (and `jar`, `jshell`) to exit with code 1 — busybox `which`
-exits 1 on a miss. No output assertion is needed.
+`which javac` (and `jar`, `jshell`, `mvn`) to exit with code 1 — busybox
+`which` exits 1 on a miss. No output assertion is needed.
 
 ### Java Version / Path Mismatches
 
@@ -233,9 +234,10 @@ The `test-all` services return:
 When updating the Docker images:
 
 1. **Temurin patch updates**: No test changes needed (assertions are major-version loose)
-2. **Java major upgrades**: Update paths and version strings in all six test files (see [DEVELOPMENT.md](DEVELOPMENT.md))
-3. **Alpine version updates**: Renovate keeps the `base.name` labels and both metadata tests in sync with the `FROM` version
-4. **New functionality**: Add corresponding tests to verify behavior
-5. **Label changes**: Update both metadata tests to match new labels
+2. **Maven minor/patch updates**: No test changes needed (the `mvn --version` assertion is major-version loose, and the pinned install is reached via the version-independent `/opt/maven` symlink)
+3. **Java major upgrades**: Update paths and version strings in all six test files (see [DEVELOPMENT.md](DEVELOPMENT.md))
+4. **Alpine version updates**: Renovate keeps the `base.name` labels and both metadata tests in sync with the `FROM` version
+5. **New functionality**: Add corresponding tests to verify behavior
+6. **Label changes**: Update both metadata tests to match new labels
 
 Always run the full test suite before creating a release.

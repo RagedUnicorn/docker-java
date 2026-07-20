@@ -51,9 +51,10 @@ docker compose -f docker-compose.dev.yml build
 # Run in development mode (interactive shell)
 docker compose -f docker-compose.dev.yml run --rm java-dev
 
-# Inside the container, you can run Java manually
+# Inside the container, you can run Java and Maven manually
 java -version
 javac -version
+mvn --version
 ```
 
 The development mode:
@@ -130,6 +131,7 @@ This project uses [Renovate](https://docs.renovatebot.com/) to automatically man
 
 - **Alpine Linux**: Renovate monitors Docker Hub and creates PRs for new Alpine versions. Every Alpine reference is kept in sync from a single grouped PR — the `FROM` line (Renovate's built-in dockerfile manager), the `org.opencontainers.image.base.name` OCI labels in both variant stages, and the Alpine version asserted in `test/jdk_metadata_test.yml` and `test/jre_metadata_test.yml` (via regex `customManagers` in `renovate.json`).
 - **Eclipse Temurin**: The Temurin version is pinned via the single `TEMURIN_VERSION` build arg, which covers both variants (jdk and jre releases are in lockstep). Renovate discovers new versions through a custom HTML datasource that reads the Adoptium apk repository listing (`https://packages.adoptium.net/artifactory/apk/alpine/main/x86_64/`) and filters for `temurin-21-jdk-*.apk`. Because the Adoptium index retains all historical versions, an existing pin keeps building even after newer patches land.
+- **Apache Maven** (jdk variant only): The Maven version is pinned via the `MAVEN_VERSION` build arg. Renovate discovers new versions through the standard `maven` datasource (Maven Central, `org.apache.maven:apache-maven`), while the Dockerfile downloads the matching official binary tarball from `https://archive.apache.org/dist/maven/maven-3/` with SHA-512 verification. The archive retains every release, so an existing pin keeps building. Renovate is constrained to `<4.0.0` — a Maven **major** upgrade is a deliberate manual migration because the `maven-3` segment of the download URL and the `allowedVersions` guard in `renovate.json` must change together.
 
 When Renovate creates a PR:
 
@@ -162,7 +164,7 @@ When manually updating the Alpine version, update only the `FROM alpine:X.X.X` l
 
 ### Dockerfile Best Practices
 
-1. **Minimal installation**: Only the Temurin runtime/JDK and CA certificates
+1. **Minimal installation**: Only the Temurin runtime/JDK, CA certificates, and (jdk only) Apache Maven
 2. **Shared base stage**: Common setup lives once in the `base` stage
 3. **Cache efficiency**: Order commands from least to most frequently changed
 4. **Security**: Run as non-root user

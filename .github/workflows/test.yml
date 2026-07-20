@@ -89,6 +89,9 @@ jobs:
               echo "Testing javac..."
               docker run --rm --entrypoint javac ragedunicorn/java:test-jdk -version
               echo ""
+              echo "Testing mvn..."
+              docker run --rm --entrypoint mvn ragedunicorn/java:test-jdk --version
+              echo ""
               echo "Testing single-file source launch..."
               docker run --rm -v "$(pwd)/examples:/app" ragedunicorn/java:test-jdk Hello.java
             else
