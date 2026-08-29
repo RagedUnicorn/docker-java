@@ -1,6 +1,6 @@
 # docker-java
 
-![](./docs/docker_java.png)
+![](./docs/docker_java_banner.svg)
 
 [![Release Build](https://github.com/ragedunicorn/docker-java/actions/workflows/docker_release.yml/badge.svg)](https://github.com/ragedunicorn/docker-java/actions/workflows/docker_release.yml)
 [![Test](https://github.com/ragedunicorn/docker-java/actions/workflows/test.yml/badge.svg)](https://github.com/ragedunicorn/docker-java/actions/workflows/test.yml)
