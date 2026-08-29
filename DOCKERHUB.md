@@ -1,6 +1,6 @@
 # Java (Eclipse Temurin) Alpine Docker Image
 
-![Docker Java](https://raw.githubusercontent.com/ragedunicorn/docker-java/master/docs/docker_java.png)
+![Docker Java](https://raw.githubusercontent.com/ragedunicorn/docker-java/master/docs/docker_java_banner.png)
 
 A minimal Java image on Alpine Linux, shipping Eclipse Temurin 21 (LTS) from the Adoptium apk repository in two variants: a full JDK with Apache Maven and a runtime-only JRE.
 
