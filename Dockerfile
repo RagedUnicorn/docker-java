@@ -6,7 +6,7 @@ ARG TEMURIN_VERSION=21.0.11_p10-r0
 # renovate: datasource=maven depName=org.apache.maven:apache-maven
 ARG MAVEN_VERSION=3.9.16
 
-FROM alpine:3.24.1 AS base
+FROM alpine:3.24.2 AS base
 
 # Base stage labels
 LABEL org.opencontainers.image.authors="Michael Wiesendanger <michael.wiesendanger@gmail.com>" \
@@ -50,7 +50,7 @@ LABEL org.opencontainers.image.title="Eclipse Temurin 21 JRE on Alpine Linux" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.version="${VERSION}" \
       org.opencontainers.image.created="${BUILD_DATE}" \
-      org.opencontainers.image.base.name="docker.io/library/alpine:3.24.1"
+      org.opencontainers.image.base.name="docker.io/library/alpine:3.24.2"
 
 # java-common (Alpine community repo, pulled in as a dependency) symlinks the
 # JVM binaries into /usr/bin and maintains /usr/lib/jvm/default-jvm.
@@ -86,7 +86,7 @@ LABEL org.opencontainers.image.title="Eclipse Temurin 21 JDK on Alpine Linux" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.version="${VERSION}" \
       org.opencontainers.image.created="${BUILD_DATE}" \
-      org.opencontainers.image.base.name="docker.io/library/alpine:3.24.1"
+      org.opencontainers.image.base.name="docker.io/library/alpine:3.24.2"
 
 # java-common (Alpine community repo, pulled in as a dependency) symlinks the
 # JVM binaries into /usr/bin and maintains /usr/lib/jvm/default-jvm.
