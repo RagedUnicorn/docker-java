@@ -7,6 +7,12 @@
 #
 # This will validate the Java Docker images (jdk and jre variants) structure,
 # commands, and metadata
+#
+# JAVA_JDK_TEST_VERSION / JAVA_JRE_TEST_VERSION are deliberately different
+# variables from the JAVA_JDK_VERSION / JAVA_JRE_VERSION used by
+# docker-compose.yml: .env pins those to 'latest' / 'latest-jre' for day to
+# day use, and reusing them here would silently point the test suite at the
+# published images instead of the local builds. See TEST.md.
 
 services:
   # Test file existence and permissions (jdk)
@@ -15,7 +21,7 @@ services:
     volumes:
       - ./test/:/test:ro
       - /var/run/docker.sock:/var/run/docker.sock
-    command: ["--image", "ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk}", "--config", "/test/jdk_test.yml"]
+    command: ["--image", "ragedunicorn/java:${JAVA_JDK_TEST_VERSION:-test-jdk}", "--config", "/test/jdk_test.yml"]
     labels:
       org.opencontainers.image.title: "Container Structure Test - File Tests (JDK)"
       org.opencontainers.image.description: "Validating Java JDK file structure and permissions"
@@ -27,7 +33,7 @@ services:
     volumes:
       - ./test/:/test:ro
       - /var/run/docker.sock:/var/run/docker.sock
-    command: ["--image", "ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk}", "--config", "/test/jdk_command_test.yml"]
+    command: ["--image", "ragedunicorn/java:${JAVA_JDK_TEST_VERSION:-test-jdk}", "--config", "/test/jdk_command_test.yml"]
     labels:
       org.opencontainers.image.title: "Container Structure Test - Command Tests (JDK)"
       org.opencontainers.image.description: "Validating Java JDK command execution and functionality"
@@ -39,7 +45,7 @@ services:
     volumes:
       - ./test/:/test:ro
       - /var/run/docker.sock:/var/run/docker.sock
-    command: ["--image", "ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk}", "--config", "/test/jdk_metadata_test.yml"]
+    command: ["--image", "ragedunicorn/java:${JAVA_JDK_TEST_VERSION:-test-jdk}", "--config", "/test/jdk_metadata_test.yml"]
     labels:
       org.opencontainers.image.title: "Container Structure Test - Metadata Tests (JDK)"
       org.opencontainers.image.description: "Validating Java JDK image metadata and OCI labels"
@@ -51,7 +57,7 @@ services:
     volumes:
       - ./test/:/test:ro
       - /var/run/docker.sock:/var/run/docker.sock
-    command: ["--image", "ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre}", "--config", "/test/jre_test.yml"]
+    command: ["--image", "ragedunicorn/java:${JAVA_JRE_TEST_VERSION:-test-jre}", "--config", "/test/jre_test.yml"]
     labels:
       org.opencontainers.image.title: "Container Structure Test - File Tests (JRE)"
       org.opencontainers.image.description: "Validating Java JRE file structure and permissions"
@@ -63,7 +69,7 @@ services:
     volumes:
       - ./test/:/test:ro
       - /var/run/docker.sock:/var/run/docker.sock
-    command: ["--image", "ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre}", "--config", "/test/jre_command_test.yml"]
+    command: ["--image", "ragedunicorn/java:${JAVA_JRE_TEST_VERSION:-test-jre}", "--config", "/test/jre_command_test.yml"]
     labels:
       org.opencontainers.image.title: "Container Structure Test - Command Tests (JRE)"
       org.opencontainers.image.description: "Validating Java JRE command execution and functionality"
@@ -75,7 +81,7 @@ services:
     volumes:
       - ./test/:/test:ro
       - /var/run/docker.sock:/var/run/docker.sock
-    command: ["--image", "ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre}", "--config", "/test/jre_metadata_test.yml"]
+    command: ["--image", "ragedunicorn/java:${JAVA_JRE_TEST_VERSION:-test-jre}", "--config", "/test/jre_metadata_test.yml"]
     labels:
       org.opencontainers.image.title: "Container Structure Test - Metadata Tests (JRE)"
       org.opencontainers.image.description: "Validating Java JRE image metadata and OCI labels"
@@ -90,11 +96,11 @@ services:
     entrypoint: /bin/sh
     command: >
       -c "echo 'Running all Container Structure Tests for Java (JDK)...' &&
-          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk} --config /test/jdk_test.yml &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_TEST_VERSION:-test-jdk} --config /test/jdk_test.yml &&
           echo '✓ JDK file structure tests passed' &&
-          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk} --config /test/jdk_command_test.yml &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_TEST_VERSION:-test-jdk} --config /test/jdk_command_test.yml &&
           echo '✓ JDK command execution tests passed' &&
-          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk} --config /test/jdk_metadata_test.yml &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_TEST_VERSION:-test-jdk} --config /test/jdk_metadata_test.yml &&
           echo '✓ JDK metadata validation tests passed' &&
           echo && echo '✅ All Java JDK container tests completed successfully!'"
     labels:
@@ -111,11 +117,11 @@ services:
     entrypoint: /bin/sh
     command: >
       -c "echo 'Running all Container Structure Tests for Java (JRE)...' &&
-          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre} --config /test/jre_test.yml &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_TEST_VERSION:-test-jre} --config /test/jre_test.yml &&
           echo '✓ JRE file structure tests passed' &&
-          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre} --config /test/jre_command_test.yml &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_TEST_VERSION:-test-jre} --config /test/jre_command_test.yml &&
           echo '✓ JRE command execution tests passed' &&
-          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre} --config /test/jre_metadata_test.yml &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_TEST_VERSION:-test-jre} --config /test/jre_metadata_test.yml &&
           echo '✓ JRE metadata validation tests passed' &&
           echo && echo '✅ All Java JRE container tests completed successfully!'"
     labels:
@@ -132,17 +138,17 @@ services:
     entrypoint: /bin/sh
     command: >
       -c "echo 'Running all Container Structure Tests for Java (JDK + JRE)...' &&
-          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk} --config /test/jdk_test.yml &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_TEST_VERSION:-test-jdk} --config /test/jdk_test.yml &&
           echo '✓ JDK file structure tests passed' &&
-          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk} --config /test/jdk_command_test.yml &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_TEST_VERSION:-test-jdk} --config /test/jdk_command_test.yml &&
           echo '✓ JDK command execution tests passed' &&
-          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_VERSION:-test-jdk} --config /test/jdk_metadata_test.yml &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JDK_TEST_VERSION:-test-jdk} --config /test/jdk_metadata_test.yml &&
           echo '✓ JDK metadata validation tests passed' &&
-          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre} --config /test/jre_test.yml &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_TEST_VERSION:-test-jre} --config /test/jre_test.yml &&
           echo '✓ JRE file structure tests passed' &&
-          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre} --config /test/jre_command_test.yml &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_TEST_VERSION:-test-jre} --config /test/jre_command_test.yml &&
           echo '✓ JRE command execution tests passed' &&
-          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_VERSION:-test-jre} --config /test/jre_metadata_test.yml &&
+          container-structure-test test --image ragedunicorn/java:${JAVA_JRE_TEST_VERSION:-test-jre} --config /test/jre_metadata_test.yml &&
           echo '✓ JRE metadata validation tests passed' &&
           echo && echo '✅ All Java container tests completed successfully!'"
     labels:

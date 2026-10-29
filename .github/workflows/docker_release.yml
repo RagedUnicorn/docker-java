@@ -37,8 +37,8 @@ jobs:
           cache-to: type=gha,mode=max,scope=${{ matrix.variant }}
       - name: Run Container Structure Tests (${{ matrix.variant }})
         env:
-          JAVA_JDK_VERSION: test-jdk
-          JAVA_JRE_VERSION: test-jre
+          JAVA_JDK_TEST_VERSION: test-jdk
+          JAVA_JRE_TEST_VERSION: test-jre
         run: |
           echo "::notice title=🧪 Running Tests::Validating Docker image before release..."
           docker compose -f docker-compose.test.yml pull

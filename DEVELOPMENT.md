@@ -100,23 +100,23 @@ docker buildx build --load --provenance=false --target jre -t ragedunicorn/java:
 
 ```bash
 # Run all tests against your local builds
-JAVA_JDK_VERSION=test-jdk JAVA_JRE_VERSION=test-jre docker compose -f docker-compose.test.yml run --rm test-all
+JAVA_JDK_TEST_VERSION=test-jdk JAVA_JRE_TEST_VERSION=test-jre docker compose -f docker-compose.test.yml run --rm test-all
 
 # Run per-variant or single suites during development
-JAVA_JDK_VERSION=test-jdk docker compose -f docker-compose.test.yml run --rm test-all-jdk
-JAVA_JRE_VERSION=test-jre docker compose -f docker-compose.test.yml up container-test-command-jre
+JAVA_JDK_TEST_VERSION=test-jdk docker compose -f docker-compose.test.yml run --rm test-all-jdk
+JAVA_JRE_TEST_VERSION=test-jre docker compose -f docker-compose.test.yml up container-test-command-jre
 ```
 
 **Windows Command Prompt:**
 
 ```cmd
-set JAVA_JDK_VERSION=test-jdk && set JAVA_JRE_VERSION=test-jre && docker compose -f docker-compose.test.yml run --rm test-all
+set JAVA_JDK_TEST_VERSION=test-jdk && set JAVA_JRE_TEST_VERSION=test-jre && docker compose -f docker-compose.test.yml run --rm test-all
 ```
 
 **Windows PowerShell:**
 
 ```powershell
-$env:JAVA_JDK_VERSION="test-jdk"; $env:JAVA_JRE_VERSION="test-jre"; docker compose -f docker-compose.test.yml run --rm test-all
+$env:JAVA_JDK_TEST_VERSION="test-jdk"; $env:JAVA_JRE_TEST_VERSION="test-jre"; docker compose -f docker-compose.test.yml run --rm test-all
 ```
 
 **Important:** Never test against remote images - they may have different labels or configurations. Local builds (`test-jdk` / `test-jre`) are the only images the tests are written against.

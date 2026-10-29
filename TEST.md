@@ -78,19 +78,19 @@ docker buildx build --load --provenance=false --target jre -t ragedunicorn/java:
 
 ```bash
 # Run tests against your local builds
-JAVA_JDK_VERSION=test-jdk JAVA_JRE_VERSION=test-jre docker compose -f docker-compose.test.yml run --rm test-all
+JAVA_JDK_TEST_VERSION=test-jdk JAVA_JRE_TEST_VERSION=test-jre docker compose -f docker-compose.test.yml run --rm test-all
 ```
 
 **Windows (PowerShell):**
 
 ```powershell
-$env:JAVA_JDK_VERSION="test-jdk"; $env:JAVA_JRE_VERSION="test-jre"; docker compose -f docker-compose.test.yml run --rm test-all
+$env:JAVA_JDK_TEST_VERSION="test-jdk"; $env:JAVA_JRE_TEST_VERSION="test-jre"; docker compose -f docker-compose.test.yml run --rm test-all
 ```
 
 **Windows (Command Prompt):**
 
 ```cmd
-set JAVA_JDK_VERSION=test-jdk && set JAVA_JRE_VERSION=test-jre && docker compose -f docker-compose.test.yml run --rm test-all
+set JAVA_JDK_TEST_VERSION=test-jdk && set JAVA_JRE_TEST_VERSION=test-jre && docker compose -f docker-compose.test.yml run --rm test-all
 ```
 
 **Why local testing is important:**
@@ -99,9 +99,11 @@ set JAVA_JDK_VERSION=test-jdk && set JAVA_JRE_VERSION=test-jre && docker compose
 - Avoids false positives/negatives from version mismatches
 - Guarantees consistent test results
 
-Note: the committed `.env` defaults the image variables to `latest` /
-`latest-jre` for everyday compose usage, so the test environment variables
-must be set explicitly when running tests.
+### Why `JAVA_JDK_TEST_VERSION` and not `JAVA_JDK_VERSION`
+
+`docker-compose.test.yml` reads its own variables, `JAVA_JDK_TEST_VERSION` and `JAVA_JRE_TEST_VERSION`, which default to `test-jdk` / `test-jre`. The runtime compose file and the examples read `JAVA_JDK_VERSION` / `JAVA_JRE_VERSION`, which `.env` pins to `latest` / `latest-jre`.
+
+Keeping them separate matters. If both files read the same variables, the `latest` values in `.env` silently win over the `:-test-jdk` / `:-test-jre` fallbacks in the test compose file, and a bare `docker compose -f docker-compose.test.yml run --rm test-all` quietly validates the **published** images instead of the ones you just built. With separate variables, the bare command always tests the local builds.
 
 ### Testing Different Versions
 
@@ -114,13 +116,13 @@ docker buildx build --load --provenance=false --target jdk -t ragedunicorn/java:
 **Linux/macOS:**
 
 ```bash
-JAVA_JDK_VERSION=21.0.11-jdk-alpine3.24.1-1 docker compose -f docker-compose.test.yml run --rm test-all-jdk
+JAVA_JDK_TEST_VERSION=21.0.11-jdk-alpine3.24.1-1 docker compose -f docker-compose.test.yml run --rm test-all-jdk
 ```
 
 **Windows (PowerShell):**
 
 ```powershell
-$env:JAVA_JDK_VERSION="21.0.11-jdk-alpine3.24.1-1"; docker compose -f docker-compose.test.yml run --rm test-all-jdk
+$env:JAVA_JDK_TEST_VERSION="21.0.11-jdk-alpine3.24.1-1"; docker compose -f docker-compose.test.yml run --rm test-all-jdk
 ```
 
 ## Troubleshooting Test Failures
@@ -159,7 +161,7 @@ docker run --rm --entrypoint sh ragedunicorn/java:test-jdk -c \
 **Common causes:**
 
 1. **Testing remote images instead of local builds**
-   - Always test your local builds with `JAVA_JDK_VERSION=test-jdk` / `JAVA_JRE_VERSION=test-jre`
+   - Always test your local builds with `JAVA_JDK_TEST_VERSION=test-jdk` / `JAVA_JRE_TEST_VERSION=test-jre`
 
 2. **Label value mismatches**
    - The Alpine version in `org.opencontainers.image.base.name` is renovate-synced with the `FROM` line; if you bumped Alpine manually, the metadata tests drift until Renovate's next run (or update them yourself)
@@ -220,8 +222,8 @@ Manual integration example:
 ```yaml
 - name: Run Container Structure Tests
   env:
-    JAVA_JDK_VERSION: test-jdk
-    JAVA_JRE_VERSION: test-jre
+    JAVA_JDK_TEST_VERSION: test-jdk
+    JAVA_JRE_TEST_VERSION: test-jre
   run: docker compose -f docker-compose.test.yml run --rm test-all
 ```
 
