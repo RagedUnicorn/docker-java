@@ -13,8 +13,8 @@ docker pull ragedunicorn/java:latest
 # Pull the JRE
 docker pull ragedunicorn/java:latest-jre
 
-# Or pull a specific version
-docker pull ragedunicorn/java:21.0.11-jdk-alpine3.24.1-1
+# Or pull a specific version (see the Tags tab for the available versions)
+docker pull ragedunicorn/java:<java-version>-jdk-alpine<alpine-version>-<build>
 
 # Print the Java version (default command)
 docker run --rm ragedunicorn/java:latest
@@ -81,10 +81,14 @@ This image uses semantic versioning that includes all component versions:
 
 ### Version Examples
 
-- `21.0.11-jdk-alpine3.24.1-1` - Temurin 21.0.11 JDK on Alpine 3.24.1, build 1
-- `21.0.11-jre-alpine3.24.1-1` - Temurin 21.0.11 JRE on Alpine 3.24.1, build 1
+`X.Y.Z` is the Temurin version, `A.B.C` the Alpine version:
+
+- `X.Y.Z-jdk-alpineA.B.C-1` - Temurin X.Y.Z JDK on Alpine A.B.C, build 1
+- `X.Y.Z-jre-alpineA.B.C-1` - Temurin X.Y.Z JRE on Alpine A.B.C, build 1
 - `latest` - Most recent stable JDK release
 - `latest-jre` - Most recent stable JRE release
+
+The available versions are listed in the [Tags tab](https://hub.docker.com/r/ragedunicorn/java/tags).
 
 Both variants are published together from a single release. When updates are available through automated dependency management, new releases are created with appropriate version tags.
 

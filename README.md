@@ -57,8 +57,11 @@ docker run -v $(pwd):/app ragedunicorn/java:latest [java-options]
 docker run -v $(pwd):/app ragedunicorn/java:latest-jre [java-options]
 
 # Using an exact version combination
-docker run -v $(pwd):/app ragedunicorn/java:21.0.11-jdk-alpine3.24.1-1 [java-options]
+docker run -v $(pwd):/app ragedunicorn/java:<java-version>-jdk-alpine<alpine-version>-<build> [java-options]
 ```
+
+Available tags are listed on [Docker Hub](https://hub.docker.com/r/ragedunicorn/java/tags) and in the
+[GitHub releases](https://github.com/RagedUnicorn/docker-java/releases).
 
 ### Examples
 
@@ -189,11 +192,13 @@ This project uses semantic versioning that matches the Docker image contents:
 
 **Format:** `{java_version}-{jdk|jre}-alpine{alpine_version}-{build_number}`
 
-Examples:
-- `21.0.11-jdk-alpine3.24.1-1` - Temurin 21.0.11 JDK on Alpine 3.24.1, build 1
-- `21.0.11-jre-alpine3.24.1-1` - Temurin 21.0.11 JRE on Alpine 3.24.1, build 1
+Examples (`X.Y.Z` is the Temurin version, `A.B.C` the Alpine version):
+- `X.Y.Z-jdk-alpineA.B.C-1` - Temurin X.Y.Z JDK on Alpine A.B.C, build 1
+- `X.Y.Z-jre-alpineA.B.C-1` - Temurin X.Y.Z JRE on Alpine A.B.C, build 1
 - `latest` - Most recent stable JDK release
 - `latest-jre` - Most recent stable JRE release
+
+The current tags are listed on [Docker Hub](https://hub.docker.com/r/ragedunicorn/java/tags).
 
 A single git tag (`v{java_version}-alpine{alpine_version}-{build_number}`) produces both variant images. For the detailed release process and versioning guidelines, see [RELEASE.md](RELEASE.md).
 

@@ -77,7 +77,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       # docker/metadata-action cannot interleave the variant into the middle
-      # of the tag (21.0.11-jdk-alpine3.24.1-1) and its generated labels would
+      # of the tag (X.Y.Z-jdk-alpineA.B.C-N) and its generated labels would
       # override the per-variant title/description baked into the Dockerfile
       # stages, so the tags are computed directly instead.
       - name: Compute release metadata

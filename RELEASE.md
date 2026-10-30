@@ -6,8 +6,11 @@ This document describes how to create a new release for the Docker Java project.
 
 ```bash
 # Tag format: v{java_version}-alpine{alpine_version}-{build_number}
-git tag -a v21.0.11-alpine3.24.1-1 -m "v21.0.11-alpine3.24.1-1"
-git push origin v21.0.11-alpine3.24.1-1
+# Take the versions from the Dockerfile (TEMURIN_VERSION without the apk
+# suffix, e.g. the X.Y.Z of X.Y.Z_pN-rN, and the FROM line)
+TAG=v<java-version>-alpine<alpine-version>-<build>
+git tag -a "$TAG" -m "$TAG"
+git push origin "$TAG"
 ```
 
 This automatically triggers the release process via GitHub Actions. A single
@@ -19,15 +22,16 @@ See [README.md](README.md#versioning) for the complete versioning documentation.
 
 **Format:** `v{java_version}-alpine{alpine_version}-{build_number}`
 
-Examples:
-- `v21.0.11-alpine3.24.1-1` - Initial release
-- `v21.0.11-alpine3.24.1-2` - Rebuild with same versions
-- `v21.0.11-alpine3.24.2-1` - Alpine update (build resets to 1)
-- `v21.0.12-alpine3.24.2-1` - Temurin update (build resets to 1)
+Examples (`X.Y.Z` is the Temurin version, `A.B.C` the Alpine version):
+- `vX.Y.Z-alpineA.B.C-1` - Initial release
+- `vX.Y.Z-alpineA.B.C-2` - Rebuild with same versions
+- `vX.Y.Z-alpineA.B.D-1` - Alpine update (build resets to 1)
+- `vX.Y.Z+1-alpineA.B.D-1` - Temurin update (build resets to 1)
 
-The pushed Docker tags insert the variant after the Java version:
-`21.0.11-jdk-alpine3.24.1-1` and `21.0.11-jre-alpine3.24.1-1`, plus the
-rolling `latest` (jdk) and `latest-jre` (jre) tags.
+The git tag carries no variant. The pushed Docker tags drop the `v` and insert
+the variant after the Java version: git tag `vX.Y.Z-alpineA.B.C-N` becomes
+`X.Y.Z-jdk-alpineA.B.C-N` and `X.Y.Z-jre-alpineA.B.C-N`, plus the rolling
+`latest` (jdk) and `latest-jre` (jre) tags. There is no bare version tag.
 
 ## Release Workflow
 
@@ -63,15 +67,19 @@ Create a new release when:
 
 ### Update Docker Hub Documentation
 
-After creating a release, manually update the Docker Hub repository description:
+`DOCKERHUB.md` is the source of truth for the Docker Hub repository
+description. It deliberately contains no concrete versions (readers find those
+in the Tags tab), so a release alone does not require a description update.
+Only when `DOCKERHUB.md` changed since the last sync:
 
 1. Go to [Docker Hub](https://hub.docker.com/r/ragedunicorn/java)
 2. Click "Manage Repository" → "Description"
 3. Copy the contents of `DOCKERHUB.md`
-4. Update any version numbers in the examples to match the latest release
-5. Save the changes
+4. Save the changes
 
-**Note**: The `DOCKERHUB.md` file is maintained in the repository as the source of truth for Docker Hub documentation.
+**Note**: the sync stays manual on purpose. Docker Hub only offers an
+undocumented endpoint for description updates, and it needs a separate
+Read/Write/Delete access token.
 
 ## Best Practices
 
@@ -106,7 +114,7 @@ Before creating a release:
 
 ### Release didn't trigger
 
-- Ensure tag starts with `v` and follows the format (e.g., `v21.0.11-alpine3.24.1-1`)
+- Ensure tag starts with `v` and follows the format (e.g., `vX.Y.Z-alpineA.B.C-N`)
 - Check GitHub Actions tab for workflow runs
 - Verify you have push permissions
 
@@ -145,12 +153,12 @@ If automation fails, you can create a release manually:
 
 1. Go to repository's "Releases" page
 2. Click "Create a new release"
-3. Choose your tag (must follow format: `v21.0.11-alpine3.24.1-1`)
+3. Choose your tag (must follow format: `vX.Y.Z-alpineA.B.C-N`)
 4. Add release notes
-5. Include Docker pull commands:
+5. Include Docker pull commands (the variant image tags, see [Version Tag Format](#version-tag-format)):
    ```
-   docker pull ghcr.io/ragedunicorn/docker-java:21.0.11-jdk-alpine3.24.1-1
-   docker pull ghcr.io/ragedunicorn/docker-java:21.0.11-jre-alpine3.24.1-1
-   docker pull ragedunicorn/java:21.0.11-jdk-alpine3.24.1-1
-   docker pull ragedunicorn/java:21.0.11-jre-alpine3.24.1-1
+   docker pull ghcr.io/ragedunicorn/docker-java:<java-version>-jdk-alpine<alpine-version>-<build>
+   docker pull ghcr.io/ragedunicorn/docker-java:<java-version>-jre-alpine<alpine-version>-<build>
+   docker pull ragedunicorn/java:<java-version>-jdk-alpine<alpine-version>-<build>
+   docker pull ragedunicorn/java:<java-version>-jre-alpine<alpine-version>-<build>
    ```

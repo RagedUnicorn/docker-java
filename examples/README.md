@@ -15,7 +15,7 @@ Expected output:
 
 ```
 Hello, World from Docker Java!
-Java version: 21.0.11
+Java version: <java-version>
 Java runtime: OpenJDK Runtime Environment
 OS: Linux amd64
 ```

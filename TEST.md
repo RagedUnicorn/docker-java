@@ -110,19 +110,19 @@ Keeping them separate matters. If both files read the same variables, the `lates
 When testing different versions, always build locally first:
 
 ```bash
-docker buildx build --load --provenance=false --target jdk -t ragedunicorn/java:21.0.11-jdk-alpine3.24.1-1 .
+docker buildx build --load --provenance=false --target jdk -t ragedunicorn/java:<java-version>-jdk-alpine<alpine-version>-<build> .
 ```
 
 **Linux/macOS:**
 
 ```bash
-JAVA_JDK_TEST_VERSION=21.0.11-jdk-alpine3.24.1-1 docker compose -f docker-compose.test.yml run --rm test-all-jdk
+JAVA_JDK_TEST_VERSION=<java-version>-jdk-alpine<alpine-version>-<build> docker compose -f docker-compose.test.yml run --rm test-all-jdk
 ```
 
 **Windows (PowerShell):**
 
 ```powershell
-$env:JAVA_JDK_TEST_VERSION="21.0.11-jdk-alpine3.24.1-1"; docker compose -f docker-compose.test.yml run --rm test-all-jdk
+$env:JAVA_JDK_TEST_VERSION="<java-version>-jdk-alpine<alpine-version>-<build>"; docker compose -f docker-compose.test.yml run --rm test-all-jdk
 ```
 
 ## Troubleshooting Test Failures

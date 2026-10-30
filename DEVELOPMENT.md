@@ -72,18 +72,22 @@ docker buildx build --load --provenance=false --target jdk -t ragedunicorn/java:
 # Build the JRE variant
 docker buildx build --load --provenance=false --target jre -t ragedunicorn/java:test-jre .
 
-# Build with specific versions
+# Build with version metadata (Temurin, Maven and Alpine come from the Dockerfile)
 docker build \
   --target jdk \
   --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
-  --build-arg VERSION=21.0.11-jdk-alpine3.24.1-1 \
-  -t ragedunicorn/java:21.0.11-jdk-alpine3.24.1-1 .
+  --build-arg VERSION=dev \
+  -t ragedunicorn/java:dev .
 
 # Multi-platform build (requires buildx)
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
   --target jre .
 ```
+
+The Temurin and Maven versions are the `TEMURIN_VERSION` and `MAVEN_VERSION`
+defaults in the `Dockerfile` and the Alpine version is its `FROM` line.
+Renovate keeps them current, so the docs do not repeat them.
 
 ### 3. Testing Your Changes
 
@@ -144,7 +148,7 @@ If the Renovate datasource ever breaks (e.g. the Artifactory listing format chan
 
 ```dockerfile
 # renovate: datasource=custom.adoptium-apk depName=temurin-21-jdk versioning=loose
-ARG TEMURIN_VERSION=21.0.11_p10-r0
+ARG TEMURIN_VERSION=<java-version>_p<build>-r<release>
 ```
 
 ### Java Major Version Upgrades
