@@ -39,9 +39,12 @@ When you push a tag, GitHub Actions automatically:
 
 1. **Builds Docker images** (`.github/workflows/docker_release.yml`)
    - Runs the Container Structure Tests for both variants first
+   - Smoke-tests both linux/arm64 images under QEMU (JVM architecture; the jdk also compiles and runs a hello-world program and runs `mvn -v`)
    - Multi-platform: linux/amd64 and linux/arm64
    - Builds the `jdk` and `jre` Dockerfile targets in a matrix
    - Pushes both variants to GitHub Container Registry and Docker Hub
+   - Attaches SBOM and provenance (`mode=max`) attestations to both variants
+   - Signs each pushed digest in both registries with cosign keyless signing (GitHub OIDC)
 
 2. **Creates GitHub Release** (`create-release` job in `.github/workflows/docker_release.yml`)
    - Runs only after the images were tested and pushed successfully
