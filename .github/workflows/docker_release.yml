@@ -48,6 +48,42 @@ jobs:
           echo "::endgroup::"
 
           echo "::notice title=✅ Tests Passed::All Container Structure Tests completed successfully!"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+      - name: Build arm64 test image (${{ matrix.variant }})
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          target: ${{ matrix.variant }}
+          load: true
+          provenance: false
+          platforms: linux/arm64
+          tags: ragedunicorn/java:test-${{ matrix.variant }}-arm64
+          cache-from: type=gha,scope=${{ matrix.variant }}-arm64
+          cache-to: type=gha,mode=max,scope=${{ matrix.variant }}-arm64
+      - name: Smoke test arm64 image (${{ matrix.variant }})
+        shell: bash
+        env:
+          IMAGE: ragedunicorn/java:test-${{ matrix.variant }}-arm64
+        run: |
+          # os.arch reports the architecture the JVM was built for. An amd64 JVM
+          # in the arm64 image would still run natively on the amd64 runner, so
+          # assert the JVM reports aarch64
+          echo "::group::Checking JVM architecture under QEMU"
+          SETTINGS=$(docker run --rm --platform linux/arm64 "$IMAGE" -XshowSettings:properties -version 2>&1)
+          echo "$SETTINGS" | grep -E 'os\.arch|version'
+          if ! echo "$SETTINGS" | grep -Eq 'os\.arch = aarch64$'; then
+            echo "::error title=❌ Wrong Architecture::the ${{ matrix.variant }} arm64 image does not run an aarch64 JVM"
+            exit 1
+          fi
+          echo "::endgroup::"
+
+          if [ "${{ matrix.variant }}" = "jdk" ]; then
+            echo "::group::Compiling and running a hello-world program and checking Maven on arm64"
+            docker run --rm --platform linux/arm64 --entrypoint sh "$IMAGE" -c \
+              'cd /tmp && printf "public class Hello { public static void main(String[] a) { System.out.println(\"hello from \" + System.getProperty(\"os.arch\")); } }\n" > Hello.java && javac Hello.java && java Hello && mvn -v'
+            echo "::endgroup::"
+          fi
 
   build-and-push:
     needs: test
