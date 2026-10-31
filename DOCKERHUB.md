@@ -23,6 +23,15 @@ docker run --rm ragedunicorn/java:latest
 docker run -v $(pwd):/app ragedunicorn/java:latest Hello.java
 ```
 
+On Windows, use the PowerShell form - `${PWD}` **with braces** and the colon
+inside the quotes (without braces PowerShell parses `$PWD:` as a
+scope-qualified variable, as in `$env:PATH`, and rejects the argument):
+
+```powershell
+# Run a Java source file (JDK only)
+docker run -v "${PWD}:/app" ragedunicorn/java:latest Hello.java
+```
+
 ## Features
 
 - 🚀 **Small footprint**: compact runtime image built on Alpine Linux
@@ -40,9 +49,21 @@ docker run -v $(pwd):/app ragedunicorn/java:latest Hello.java
 docker run -v $(pwd):/app ragedunicorn/java:latest Hello.java
 ```
 
+PowerShell:
+
+```powershell
+docker run -v "${PWD}:/app" ragedunicorn/java:latest Hello.java
+```
+
 ### Run a jar with the JRE
 ```bash
 docker run -v $(pwd):/app ragedunicorn/java:latest-jre -jar app.jar
+```
+
+PowerShell:
+
+```powershell
+docker run -v "${PWD}:/app" ragedunicorn/java:latest-jre -jar app.jar
 ```
 
 ### Interactive Java shell (JDK only)
@@ -55,11 +76,23 @@ docker run -it --rm --entrypoint jshell ragedunicorn/java:latest
 docker run -v $(pwd):/app --entrypoint javac ragedunicorn/java:latest Hello.java
 ```
 
+PowerShell:
+
+```powershell
+docker run -v "${PWD}:/app" --entrypoint javac ragedunicorn/java:latest Hello.java
+```
+
 ### Build with Maven (JDK only)
 ```bash
 # The named volume keeps the local repository (~/.m2) between runs; a fresh
 # volume is initialized owned by the java user (the image pre-creates ~/.m2)
 docker run -v $(pwd):/app -v m2cache:/home/java/.m2 --entrypoint mvn ragedunicorn/java:latest package
+```
+
+PowerShell:
+
+```powershell
+docker run -v "${PWD}:/app" -v m2cache:/home/java/.m2 --entrypoint mvn ragedunicorn/java:latest package
 ```
 
 On Docker Desktop for Windows, overwriting existing files on a bind mount can fail with `Operation not permitted` for the non-root `java` user — if your build writes into the mounted workspace, run with `-u root` and use `-v m2cache-root:/root/.m2` for the cache instead.
@@ -104,6 +137,12 @@ The default working directory is `/app`. Mount your code here:
 
 ```bash
 docker run -v $(pwd):/app ragedunicorn/java:latest YourProgram.java
+```
+
+PowerShell:
+
+```powershell
+docker run -v "${PWD}:/app" ragedunicorn/java:latest YourProgram.java
 ```
 
 ## Links

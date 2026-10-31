@@ -41,6 +41,17 @@ docker pull ragedunicorn/java:latest-jre
 docker run --rm ragedunicorn/java:latest
 ```
 
+To run a Java source file from the current directory on Windows, use the PowerShell form:
+
+```powershell
+docker run --rm -v "${PWD}:/app" ragedunicorn/java:latest Hello.java
+```
+
+Write `${PWD}` **with braces** and keep the colon inside the quotes - without
+braces PowerShell parses `$PWD:` as a scope-qualified variable (as in
+`$env:PATH`) and rejects the argument. See the
+[Windows (PowerShell) notes](#windows-powershell-notes) for details.
+
 For development and building from source, see [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## Usage
@@ -60,6 +71,19 @@ docker run -v $(pwd):/app ragedunicorn/java:latest-jre [java-options]
 docker run -v $(pwd):/app ragedunicorn/java:<java-version>-jdk-alpine<alpine-version>-<build> [java-options]
 ```
 
+PowerShell:
+
+```powershell
+# Using the JDK image
+docker run -v "${PWD}:/app" ragedunicorn/java:latest [java-options]
+
+# Using the JRE image
+docker run -v "${PWD}:/app" ragedunicorn/java:latest-jre [java-options]
+
+# Using an exact version combination
+docker run -v "${PWD}:/app" ragedunicorn/java:<java-version>-jdk-alpine<alpine-version>-<build> [java-options]
+```
+
 Available tags are listed on [Docker Hub](https://hub.docker.com/r/ragedunicorn/java/tags) and in the
 [GitHub releases](https://github.com/RagedUnicorn/docker-java/releases).
 
@@ -70,9 +94,21 @@ Available tags are listed on [Docker Hub](https://hub.docker.com/r/ragedunicorn/
 docker run -v $(pwd):/app ragedunicorn/java:latest Hello.java
 ```
 
+PowerShell:
+
+```powershell
+docker run -v "${PWD}:/app" ragedunicorn/java:latest Hello.java
+```
+
 #### Run a Jar
 ```bash
 docker run -v $(pwd):/app ragedunicorn/java:latest-jre -jar app.jar
+```
+
+PowerShell:
+
+```powershell
+docker run -v "${PWD}:/app" ragedunicorn/java:latest-jre -jar app.jar
 ```
 
 #### Interactive Java Shell (JDK only)
@@ -85,6 +121,12 @@ docker run -it --rm --entrypoint jshell ragedunicorn/java:latest
 docker run -v $(pwd):/app --entrypoint javac ragedunicorn/java:latest Hello.java
 ```
 
+PowerShell:
+
+```powershell
+docker run -v "${PWD}:/app" --entrypoint javac ragedunicorn/java:latest Hello.java
+```
+
 #### Build with Maven (JDK only)
 ```bash
 # The named volume keeps the local repository (~/.m2) between runs,
@@ -93,20 +135,57 @@ docker run -v $(pwd):/app --entrypoint javac ragedunicorn/java:latest Hello.java
 docker run -v $(pwd):/app -v m2cache:/home/java/.m2 --entrypoint mvn ragedunicorn/java:latest package
 ```
 
+PowerShell:
+
+```powershell
+docker run -v "${PWD}:/app" -v m2cache:/home/java/.m2 --entrypoint mvn ragedunicorn/java:latest package
+```
+
 > **Note (Docker Desktop for Windows):** overwriting existing files on a
 > Windows bind mount can fail with `Operation not permitted` for the non-root
 > `java` user. If your Maven build writes into the mounted workspace (e.g.
 > copies generated resources over existing files), run as root and move the
 > cache volume to root's home:
 >
-> ```bash
-> docker run -u root -v ${PWD}:/app -v m2cache-root:/root/.m2 --entrypoint mvn ragedunicorn/java:latest package
+> ```powershell
+> docker run -u root -v "${PWD}:/app" -v m2cache-root:/root/.m2 --entrypoint mvn ragedunicorn/java:latest package
 > ```
 
 #### Check Java Version
 ```bash
 docker run --rm ragedunicorn/java:latest -version
 ```
+
+The interactive shell and version examples take no mount and run unchanged in
+PowerShell.
+
+### Windows (PowerShell) notes
+
+The PowerShell variants above differ from the bash ones only in the mount,
+which is written `-v "${PWD}:/app"` instead of `-v $(pwd):/app`. The spelling
+matters:
+
+- Pasting the bash form into PowerShell breaks: PowerShell ends the argument
+  after the `$(pwd)` subexpression, so `$(pwd):/app` reaches Docker as two
+  arguments (`C:\path` and `:/app`).
+- `"$PWD:/app"` without braces is a parse error: PowerShell reads a colon
+  after a variable as a scope qualifier (as in `$env:PATH`), and `/` is not a
+  valid variable-name character.
+- `"${PWD}:/app"` works: the braces end the variable name at `PWD`, the colon
+  stays literal, and Docker splits the resulting `C:\path:/app` on the second
+  colon because it recognises the `C:` drive prefix.
+
+To check what the container actually sees under `/app`, run a look-inside
+command:
+
+```powershell
+docker run --rm -v "${PWD}:/app" --entrypoint sh ragedunicorn/java:latest -c 'pwd; ls -la /app'
+```
+
+The single quotes keep `pwd; ls -la /app` as one literal argument to the
+container's `sh`, so the `;` runs inside the container - unquoted, PowerShell
+would treat `;` as its own statement separator and run `ls -la /app` on the
+host.
 
 ## Docker Compose Usage
 
