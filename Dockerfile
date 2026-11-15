@@ -4,7 +4,7 @@
 # renovate: datasource=custom.adoptium-apk depName=temurin-21-jdk versioning=loose
 ARG TEMURIN_VERSION=21.0.13_p9-r0
 # renovate: datasource=maven depName=org.apache.maven:apache-maven
-ARG MAVEN_VERSION=3.10.0
+ARG MAVEN_VERSION=3.10.1
 
 FROM alpine:3.24.4 AS base
 
